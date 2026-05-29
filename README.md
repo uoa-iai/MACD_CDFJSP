@@ -27,19 +27,16 @@ A single policy trained on small static instances (5 machines, 10 products, 20 j
 ```
 MACD/
 ├── env/                  # C-DFJSP environment
-├── graph/                # GNN architecture (GATedge + MLPsim)
+├── graph/                # GNN architecture (GAT + MLP)
 ├── model/                # Trained model weights (.pt)
 ├── utils/                # Helper functions
-├── data_test/            # Test instances (Brandimarte & Hurink, C-DFJSP format)
-│   ├── Brandimarte/      # MK01–MK15
-│   └── Hurink/           # E, R, V subsets (5, 10, 15 machines)
-├── PPO_model.py          # Core MACD algorithm: HGNNScheduler + PPO
+├── data_test/            # Test instances (Brandimarte & Hurink & Others)
+├── PPO_model.py          # Core MACD algorithm: HGNN + PPO
 ├── mlp.py                # MLP layers (actor, critic)
 ├── train.py              # Training script
 ├── test.py               # Testing / evaluation script
 ├── validate.py           # Validation (called automatically during training)
 ├── run_multiple_tests.py       # Batch testing across configurations
-├── run_multiple_trainings.py   # Batch training runs
 ├── config.json           # All hyperparameters and run settings
 └── requirements.txt      # Python dependencies
 ```
