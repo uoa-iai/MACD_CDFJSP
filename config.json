@@ -1,0 +1,117 @@
+{
+    "env_paras": {
+        "num_jobs": 10,
+        "num_mas": 5,
+        "batch_size": 9,
+        "ope_feat_dim": 8,
+        "ma_feat_dim": 5,
+        "show_mode": "print",
+        "valid_batch_size": 6,
+        "ma_util": 0.9,
+        "DDT_low": 1.5,
+        "DDT_high": 5.0,
+        "seed": 52,
+        "init_jobs": 20,
+        "continuous": false,
+        "time_period": 500,
+        "DDT_a": false,
+        "tight_percent": 0,
+        "negotiate_rule": "LPT"
+    },
+    "model_paras": {
+        "in_size_ma": 3,
+        "out_size_ma": 8,
+        "in_size_ope": 4,
+        "out_size_ope": 8,
+        "hidden_size_ope": 128,
+        "num_heads": [
+            1,
+            1
+        ],
+        "dropout": 0.0,
+        "n_latent_actor": 64,
+        "n_latent_critic": 64,
+        "n_hidden_actor": 3,
+        "n_hidden_critic": 3,
+        "action_dim": 1
+    },
+    "train_paras": {
+        "lr_central": 0.00025,
+        "lr_wait": 0.00025,
+        "lr_job": 0.00025,
+        "betas": [
+            0.9,
+            0.999
+        ],
+        "gamma": 1.0,
+        "K_epochs": 5,
+        "eps_clip_wait": 0.1,
+        "eps_clip_job": 0.1,
+        "A_coeff": 1.0,
+        "vf_coeff": 1.0,
+        "entropy_coeff_job": 0.0,
+        "entropy_coeff_wait": 0.0,
+        "discount_factor": 0.9,
+        "discounting": false,
+        "max_iterations": 10000,
+        "save_timestep": 20,
+        "update_timestep": 20,
+        "act_update": 1,
+        "viz": false,
+        "use_wandB": true,
+        "project_name": "MARL_GNN_DFJSP_EXPERIMENTS",
+        "minibatch_size": 1024,
+        "parallel_iter": 40,
+        "load_model": true,
+        "reward_coeff": 0.01,
+        "update_freq": 20
+    },
+    "test_paras": {
+        "rules": [],
+        "mas_rules": [],
+        "test_seed": 80,
+        "model": [
+            0
+        ],
+        "model_location": "./model/",
+        "data_headings": [
+            "tardiness",
+            "cumul_tardiness",
+            "num_jobs_completed",
+            "num_jobs_completed_late",
+            "num_jobs_sys",
+            "num_jobs_sys_late",
+            "est_sys_tardiness",
+            "sys_tardiness",
+            "duels",
+            "decisions"
+        ],
+        "num_periods": 100,
+        "data_path": [
+            "F2",
+            "F3",
+            "F4",
+            "F5",
+            "F1_5"
+        ],
+        "data_path_loc": "/data_test/synthetic/Machine_Selection_Coordination/",
+        "save_path": "./Machine_Selection_Coordination/LPT/",
+        "ma_util": [
+            0.75,
+            0.8,
+            0.85,
+            0.9,
+            0.95
+        ],
+        "DDT_low": 0.5,
+        "DDT_high": 3.0,
+        "tight_percent": [
+            0.0
+        ],
+        "time_period": 100,
+        "tests_to_exclude": [],
+        "flag_greedy": true,
+        "flag_filter_machines": true,
+        "flag_num_to_filter": 5
+    }
+}
