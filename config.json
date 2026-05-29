@@ -36,9 +36,9 @@
         "action_dim": 1
     },
     "train_paras": {
-        "lr_central": 0.00025,
-        "lr_wait": 0.00025,
-        "lr_job": 0.00025,
+        "lr_central": 0.0005,
+        "lr_wait": 0.0005,
+        "lr_job": 0.0005,
         "betas": [
             0.9,
             0.999
@@ -49,7 +49,7 @@
         "eps_clip_job": 0.1,
         "A_coeff": 1.0,
         "vf_coeff": 1.0,
-        "entropy_coeff_job": 0.0,
+        "entropy_coeff_job": 0.01,
         "entropy_coeff_wait": 0.0,
         "discount_factor": 0.9,
         "discounting": false,
