@@ -5,7 +5,7 @@ Official implementation of the paper:
 > **Multi-Agent Continuous Decision-Making for the Continuous Dynamic Flexible Job Shop Scheduling Problem**  
 > Dazzle Johnson, Gang Chen, Yuqian Lu  
 > *IEEE Transactions on Automation Science and Engineering (T-ASE)*, 2026  
-> DOI: [to be added on publication]
+> DOI: [10.1109/TASE.2026.3698853]
 
 ---
 
@@ -203,7 +203,7 @@ If you use this code or the C-DFJSP formulation, please cite:
              Dynamic Flexible Job Shop Scheduling Problem},
   journal = {IEEE Transactions on Automation Science and Engineering},
   year    = {2026},
-  note    = {DOI to be added on publication}
+  note    = {10.1109/TASE.2026.3698853}
 }
 ```
 
