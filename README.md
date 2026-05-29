@@ -5,7 +5,8 @@ Official implementation of the paper:
 > **Multi-Agent Continuous Decision-Making for the Continuous Dynamic Flexible Job Shop Scheduling Problem**  
 > Dazzle Johnson, Gang Chen, Yuqian Lu  
 > *IEEE Transactions on Automation Science and Engineering (T-ASE)*, 2026  
-> DOI: [10.1109/TASE.2026.3698853]
+> DOI: [10.1109/TASE.2026.3698853](http://dx.doi.org/10.1109/TASE.2026.3698853)
+)
 
 ---
 
