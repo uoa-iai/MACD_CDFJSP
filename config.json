@@ -16,7 +16,7 @@
         "time_period": 500,
         "DDT_a": false,
         "tight_percent": 0,
-        "negotiate_rule": "LPT"
+        "negotiate_rule": "Mixed"
     },
     "model_paras": {
         "in_size_ma": 3,

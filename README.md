@@ -11,14 +11,14 @@ Official implementation of the paper:
 
 ## Overview
 
-MACD is a multi-agent reinforcement learning system for the **Continuous Dynamic Flexible Job Shop Scheduling Problem (C-DFJSP)** — a scheduling formulation where job orders arrive continuously from a dynamic product library, machines operate asynchronously, and decisions must be made in real time without knowledge of future arrivals.
+MACD is a multi-agent reinforcement learning system for the **Continuous Dynamic Flexible Job Shop Scheduling Problem (C-DFJSP)** -- a scheduling formulation where job orders arrive continuously from a dynamic product library, machines operate asynchronously, and decisions must be made in real time without knowledge of future arrivals.
 
 MACD integrates:
 - **Graph Neural Networks (GNNs)** for factory-invariant feature extraction via a heterogeneous GAT + MLP architecture
 - **Proximal Policy Optimisation (PPO)** for end-to-end multi-agent policy learning
 - A **hybrid SPT/LLM negotiation strategy** (`negotiate_rule: "Mixed"` in config) to resolve rare inter-agent conflicts
 
-A single policy trained on small static instances (5 machines, 10 products, 20 jobs) generalises directly to unseen factories with up to 15 machines, 30 products, and continuous job arrivals — **no retraining required**.
+A single policy trained on small static instances (5 machines, 10 products, 20 jobs) generalises directly to unseen factories with up to 15 machines, 30 products, and continuous job arrivals -- **no retraining required**.
 
 ---
 
@@ -121,7 +121,7 @@ Key test parameters in `config.json` under `test_paras`:
 | `num_periods` | Number of evaluation periods (default: 100) |
 | `flag_filter_machines` | Enable machine pre-filtering before GAT (default: `true`) |
 | `flag_num_to_filter` | Max machines retained per operation (default: 5) |
-| `negotiate_rule` | Negotiation rule: `"SPT"`, `"LLM"`, `"EET"`, or `"Mixed"` (hybrid SPT/LLM used in paper) |
+| `negotiate_rule` | Negotiation rule: `"SPT"`, `"LLM"`, `"EET"`, `"LPT"` or `"Mixed"` (hybrid SPT/LLM used in paper) |
 
 ---
 
@@ -239,5 +239,5 @@ The C-DFJSP environment, multi-agent framework, negotiation strategy, and factor
 
 ## Contact
 
-Corresponding author: Yuqian Lu — yuqian.lu@auckland.ac.nz  
+Corresponding author: Yuqian Lu -- yuqian.lu@auckland.ac.nz  
 Industrial AI Research Group, University of Auckland, New Zealand

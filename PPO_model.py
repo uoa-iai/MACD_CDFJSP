@@ -548,7 +548,7 @@ class HGNNScheduler(nn.Module):
             duplicates = self.find_duplicate_jobs(group_actions)
         return group_actions, dup
 
-    def negotiate(self, duplicates, state, rule="SPT"):
+    def negotiate(self, duplicates, state, rule="Mixed"):
         unassigned_dict = {batch_idx: [] for batch_idx in duplicates}
         for batch_idx, batch_jobs in duplicates.items():
             unassigned_machines = []
@@ -637,130 +637,7 @@ class HGNNScheduler(nn.Module):
             unassigned_dict[batch_idx] = unassigned_machines
 
         return unassigned_dict
-
-    def negotiatev5(self, duplicates, state, memories=None, flag_greedy=False):
-        unassigned_dict = {batch_idx: [] for batch_idx in duplicates}
-        for batch_idx, batch_jobs in duplicates.items():
-            unassigned_machines = []
-            for job_idx, machines in batch_jobs.items():
-                # print(f'negotiate batch {batch_idx} job {job_idx} between machines {machines}')
-                ope_step_batch = state.ope_step_batch
-                ope = ope_step_batch[batch_idx, job_idx]
-                ope_proc_time = state.proc_times_batch[batch_idx, ope, :]
-                sorted_indices = torch.argsort(ope_proc_time)
-                assigned_ma = None
-                for ma in sorted_indices:
-                    if ma in machines:
-                        assigned_ma = ma
-                        break
-                print(f'assigned ma {assigned_ma}')
-                unassigned = [m for m in machines if m != assigned_ma]
-                unassigned_machines.extend(unassigned)
-            unassigned_dict[batch_idx] = unassigned_machines
-        return unassigned_dict
-
-    def negotiatev2(self, duplicates, state, memories=None, flag_greedy=False):
-        unassigned_dict = {batch_idx: [] for batch_idx in duplicates}  # dictionary of unassigned machines in each batch
-        for batch_idx, batch_jobs in duplicates.items():  # iterate through each batch
-            unassigned_machines = []
-            for job_idx, machines in batch_jobs.items():  # iterate through each job in batch
-                # print(f'negotiate batch {batch_idx} job {job_idx} between machines {machines}')
-                ope_step_batch = state.ope_step_batch
-                ope = ope_step_batch[batch_idx, job_idx]  # get current operation index of job
-
-                ope_proc_time = state.proc_times_batch[batch_idx, ope, :]  # get op processing times
-                end_ope = state.end_ope_biases_batch[batch_idx, job_idx]
-                # get sum of mean proc time
-                remaining_ope_proc_time = torch.sum(torch.sum(state.proc_times_batch[batch_idx, ope+1:end_ope+1, :], dim=1).div(torch.count_nonzero(state.proc_times_batch[batch_idx, ope+1:end_ope+1, :], dim=1)))
-                deadline_met = []
-                for ma in machines:  # for conflicting machines, get est. completion time and deadline
-                    est_completion_time = remaining_ope_proc_time + ope_proc_time[ma]
-                    if est_completion_time < state.deadlines_batch[batch_idx, job_idx]:
-                        deadline_met.append(ma)
-                if len(deadline_met) == 0:  # round 1: Min Completion Time
-                    sorted_indices = torch.argsort(ope_proc_time)  # idx of processing time sorted by processing time in ascending order
-                    assigned_ma = None
-                    for ma in sorted_indices:  # iterate through each idx
-                        if ma in machines:  # if the machine is in the list of machines that are in conflict then assign it
-                            assigned_ma = ma
-                            break
-                    unassigned = [m for m in machines if m != assigned_ma]  # remaining machines in conflict list are marked as unassigned
-                else:  # round 2: Min Machine Util
-                    ma_utils = state.feat_mas_batch[batch_idx, 2, :]
-                    sorted_indices = torch.argsort(ma_utils)
-                    assigned_ma = None
-                    for ma in sorted_indices:  # iterate through each idx
-                        if ma in deadline_met:  # if the machine is in the list of machines that are in conflict then assign it
-                            assigned_ma = ma
-                            break
-                    unassigned = [m for m in machines if m != assigned_ma]  # remaining machines in conflict list are marked as unassigned
-                unassigned_machines.extend(unassigned)
-            unassigned_dict[batch_idx] = unassigned_machines
-        return unassigned_dict
-
-    def negotiatev3(self, duplicates, state, memories, flag_greedy=False):
-        eps = torch.finfo(torch.float64).eps
-        unassigned_dict = {batch_idx: [] for batch_idx in duplicates}
-        for batch_idx, batch_jobs in duplicates.items():
-            unassigned_machines = []
-            for job_idx, machines in batch_jobs.items():
-                # print(f'negotiate batch {batch_idx} job {job_idx} between machines {machines}')
-                ope_step_batch = state.ope_step_batch
-                ope = ope_step_batch[batch_idx, job_idx]
-
-                ope_proc_time = state.proc_times_batch[batch_idx, ope, :]
-                sorted_indices = torch.argsort(ope_proc_time)
-                # print(f'processing sort: {sorted_indices}')
-
-                attentions2 = memories.attention_coeffs[0][batch_idx, ope, machines]
-                attentions_probs = F.softmax(attentions2, dim=0)
-                attentions_dist = Categorical(attentions_probs)
-                sample_ma = attentions_dist.sample()
-                if flag_greedy:
-                    sample_ma = (attentions_probs + eps).argmax()
-                assigned_ma = machines[sample_ma]
-                # print(f'assigned ma {assigned_ma}')
-                unassigned = [m for m in machines if m != assigned_ma]
-                unassigned_machines.extend(unassigned)
-            unassigned_dict[batch_idx] = unassigned_machines
-        return unassigned_dict
-
-    def negotiatev4(self, duplicates, state, memories=None, flag_greedy=False):
-        unassigned_dict = {batch_idx: [] for batch_idx in duplicates}  # dictionary of unassigned machines in each batch
-        for batch_idx, batch_jobs in duplicates.items():  # iterate through each batch
-            unassigned_machines = []
-            for job_idx, machines in batch_jobs.items():  # iterate through each job in batch
-                # print(f'negotiate batch {batch_idx} job {job_idx} between machines {machines}')
-                ope_step_batch = state.ope_step_batch
-                ope = ope_step_batch[batch_idx, job_idx]  # get current operation index of job
-
-                ope_proc_time = state.proc_times_batch[batch_idx, ope, :]  # get op processing times
-                single_avail = []
-                for ma in machines:  # for conflicting machines, get machines that only have one job option
-                    job_probs = memories.action_probs[ma][batch_idx]
-                    no_jobs_avail = torch.count_nonzero(job_probs)
-                    if no_jobs_avail <= 1.0:
-                        single_avail.append(ma)
-                if len(single_avail) == 0:  # round 1: all jobs have another option
-                    sorted_indices = torch.argsort(ope_proc_time)  # idx of processing time sorted by processing time in ascending order
-                    assigned_ma = None
-                    for ma in sorted_indices:  # iterate through each idx
-                        if ma in machines:  # if the machine is in the list of machines that are in conflict then assign it
-                            assigned_ma = ma
-                            break
-                    unassigned = [m for m in machines if m != assigned_ma]  # remaining machines in conflict list are marked as unassigned
-                else:  # round 2: machines that only have one job available
-                    sorted_indices = torch.argsort(ope_proc_time)
-                    assigned_ma = None
-                    for ma in sorted_indices:  # iterate through each idx
-                        if ma in single_avail:  # if the machine is in the list of machines that are in conflict then assign it
-                            assigned_ma = ma
-                            break
-                    unassigned = [m for m in machines if m != assigned_ma]  # remaining machines in conflict list are marked as unassigned
-                unassigned_machines.extend(unassigned)
-            unassigned_dict[batch_idx] = unassigned_machines
-        return unassigned_dict
-
+    
     def find_duplicate_jobs(self, group_actions):
         # Initialize a dictionary to keep track of the jobs selected by each machine in each batch
         job_dict = {}
